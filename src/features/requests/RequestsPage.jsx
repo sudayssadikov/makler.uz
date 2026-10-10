@@ -159,15 +159,20 @@ export const RequestsPage = () => {
                 </div>
 
                 {/* 48-Hour Guarantee Timer Banner (Agar to'langan bo'lsa yoki to'lov kutilayotgan bo'lsa) */}
-                {(req.status === REQUEST_STATUS.PAYMENT_PENDING || req.status === REQUEST_STATUS.PAID_ESCROW) && (
-                  <div className="neo-timer-banner">
-                    <Clock size={18} color="var(--warning)" />
-                    <div>
-                      <strong>{t('request_flow.timer_48h')} 41 soat 35 daqiqa qoldi</strong>
-                      <p>{t('request_flow.timer_desc')}</p>
+                {(req.status === REQUEST_STATUS.PAYMENT_PENDING || req.status === REQUEST_STATUS.PAID_ESCROW) && (() => {
+                  const remaining = req.expiresAt ? new Date(req.expiresAt).getTime() - Date.now() : null;
+                  const hours = remaining && remaining > 0 ? Math.floor(remaining / 3600000) : 0;
+                  const minutes = remaining && remaining > 0 ? Math.floor((remaining % 3600000) / 60000) : 0;
+                  return (
+                    <div className="neo-timer-banner">
+                      <Clock size={18} color="var(--warning)" />
+                      <div>
+                        <strong>{t('request_flow.timer_48h')} {hours} soat {minutes} daqiqa qoldi</strong>
+                        <p>{t('request_flow.timer_desc')}</p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* Details Grid: Parties, Contacts & Escrow Info */}
                 <div className="neo-req-details-grid">
