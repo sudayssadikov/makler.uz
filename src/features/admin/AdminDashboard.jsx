@@ -9,7 +9,9 @@ import {
   verifyUser,
   moderateListing,
   finalizeHandover,
-  resolveDispute
+  resolveDispute,
+  getReservedListingsQueue,
+  handoverListing
 } from '../../services/adminService';
 import { getFromStorage, STORAGE_KEYS } from '../../services/storage';
 import { toast } from '../../store/toastStore';
@@ -21,17 +23,20 @@ import {
   Check,
   X,
   Lock,
-  Unlock
+  Unlock,
+  Clock,
+  ShieldCheck
 } from 'lucide-react';
 import './AdminDashboard.css';
 
 export const AdminDashboard = () => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('users'); // 'users' | 'listings' | 'escrow' | 'disputes'
+  const [activeTab, setActiveTab] = useState('users'); // 'users' | 'listings' | 'reservations' | 'escrow' | 'disputes'
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [listings, setListings] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [reservedQueue, setReservedQueue] = useState([]);
 
   // Admin paneli ma'lumotlarini yangilash. Handlers (tugmalar) uchun ham,
   // sahifa ochilgandagi effect uchun ham bir xil manba — lekin har bir
@@ -39,11 +44,13 @@ export const AdminDashboard = () => {
   // chaqirilishi lint qoidasini buzmasligi uchun).
   const refreshAll = useCallback(async () => {
     const s = await getAdminStats();
+    const queue = await getReservedListingsQueue();
     return {
       stats: s,
       users: getFromStorage(STORAGE_KEYS.USERS, []),
       listings: getFromStorage(STORAGE_KEYS.LISTINGS, []),
-      requests: getFromStorage(STORAGE_KEYS.REQUESTS, [])
+      requests: getFromStorage(STORAGE_KEYS.REQUESTS, []),
+      reservedQueue: queue
     };
   }, []);
 
@@ -52,6 +59,7 @@ export const AdminDashboard = () => {
     setUsers(data.users);
     setListings(data.listings);
     setRequests(data.requests);
+    setReservedQueue(data.reservedQueue || []);
   }, []);
 
   useEffect(() => {

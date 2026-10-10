@@ -110,3 +110,34 @@ export const resolveDispute = async (requestId, resolution, adminDecisionNote) =
     `Admin arbitraj qarori: ${adminDecisionNote}`
   );
 };
+
+/**
+ * Band qilinganlar (Reservations) navbatini olish
+ */
+export const getReservedListingsQueue = async () => {
+  await delay(150);
+  const listings = getFromStorage(STORAGE_KEYS.LISTINGS, []);
+  const requests = getFromStorage(STORAGE_KEYS.REQUESTS, []);
+  const users = getFromStorage(STORAGE_KEYS.USERS, []);
+
+  const reserved = listings.filter((l) => ['RESERVED', 'HANDED_OVER'].includes(l.status));
+  return reserved.map((item) => {
+    const req = requests.find((r) => r.listingId === item.id && (r.status === REQUEST_STATUS.PAID_ESCROW || r.status === REQUEST_STATUS.CONTRACT_DRAFTING || r.status === REQUEST_STATUS.ADMIN_REVIEW)) || null;
+    const tenant = req ? users.find((u) => u.id === req.tenantId) || null : null;
+    const owner = users.find((u) => u.id === item.ownerId) || null;
+    return {
+      listing: item,
+      request: req,
+      tenant,
+      owner
+    };
+  });
+};
+
+/**
+ * Admin "Uyni topshirish" qilishi
+ */
+export const handoverListing = async (listingId, adminId) => {
+  const { handoverListingByAdmin } = await import('./requestsService');
+  return handoverListingByAdmin(listingId, adminId);
+};

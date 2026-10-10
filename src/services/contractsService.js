@@ -179,5 +179,20 @@ export const confirmMoveIn = async (contractId) => {
     'Ijarachi uyga muvaffaqiyatli koʻchib kirdi va inventar aktini tasdiqladi'
   );
 
+  // Listingni HANDED_OVER dan RENTED yoki SOLD ga o'tkazish
+  try {
+    const { transitionListingStatus, getListingById } = await import('./listingsService');
+    const { LISTING_STATUS } = await import('../constants/listingStatus');
+    const listing = await getListingById(contract.listingId);
+    const finalStatus = listing?.type === 'SALE' ? LISTING_STATUS.SOLD : LISTING_STATUS.RENTED;
+    await transitionListingStatus(
+      contract.listingId,
+      finalStatus,
+      'Shartnoma imzolanib, koʻchib kirish toʻliq tasdiqlandi'
+    );
+  } catch (err) {
+    console.warn('Listing status transition to RENTED/SOLD warning:', err.message);
+  }
+
   return contract;
 };
