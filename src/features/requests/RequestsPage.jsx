@@ -23,6 +23,43 @@ import {
 } from 'lucide-react';
 import './RequestsPage.css';
 
+// Qolgan vaqtni "soat / daqiqa" ko'rinishida formatlaydi (modul darajasidagi
+// toza funksiya — hook emas). Muddati o'tgan bo'lsa null qaytaradi.
+const formatRemaining = (expiresAt) => {
+  if (!expiresAt) return null;
+  const remaining = new Date(expiresAt).getTime() - Date.now();
+  if (remaining <= 0) return null;
+  const hours = Math.floor(remaining / 3600000);
+  const minutes = Math.floor((remaining % 3600000) / 60000);
+  return { hours, minutes };
+};
+
+// 48 soatlik kafolat taymeri — har daqiqada qayta hisoblanadi.
+const CountdownBanner = ({ expiresAt }) => {
+  const { t } = useTranslation();
+  const [remaining, setRemaining] = useState(() => formatRemaining(expiresAt));
+
+  useEffect(() => {
+    // Har daqiqada yangilash kifoya (soniya darajasida kerak emas)
+    const id = setInterval(() => setRemaining(formatRemaining(expiresAt)), 60000);
+    return () => clearInterval(id);
+  }, [expiresAt]);
+
+  return (
+    <div className="neo-timer-banner">
+      <Clock size={18} color="var(--warning)" />
+      <div>
+        <strong>
+          {remaining
+            ? `${t('request_flow.timer_48h')} ${remaining.hours} soat ${remaining.minutes} daqiqa qoldi`
+            : t('request_flow.timer_expired')}
+        </strong>
+        <p>{t('request_flow.timer_desc')}</p>
+      </div>
+    </div>
+  );
+};
+
 export const RequestsPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -159,20 +196,9 @@ export const RequestsPage = () => {
                 </div>
 
                 {/* 48-Hour Guarantee Timer Banner (Agar to'langan bo'lsa yoki to'lov kutilayotgan bo'lsa) */}
-                {(req.status === REQUEST_STATUS.PAYMENT_PENDING || req.status === REQUEST_STATUS.PAID_ESCROW) && (() => {
-                  const remaining = req.expiresAt ? new Date(req.expiresAt).getTime() - Date.now() : null;
-                  const hours = remaining && remaining > 0 ? Math.floor(remaining / 3600000) : 0;
-                  const minutes = remaining && remaining > 0 ? Math.floor((remaining % 3600000) / 60000) : 0;
-                  return (
-                    <div className="neo-timer-banner">
-                      <Clock size={18} color="var(--warning)" />
-                      <div>
-                        <strong>{t('request_flow.timer_48h')} {hours} soat {minutes} daqiqa qoldi</strong>
-                        <p>{t('request_flow.timer_desc')}</p>
-                      </div>
-                    </div>
-                  );
-                })()}
+                {(req.status === REQUEST_STATUS.PAYMENT_PENDING || req.status === REQUEST_STATUS.PAID_ESCROW) && (
+                  <CountdownBanner expiresAt={req.expiresAt} />
+                )}
 
                 {/* Details Grid: Parties, Contacts & Escrow Info */}
                 <div className="neo-req-details-grid">

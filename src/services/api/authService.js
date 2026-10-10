@@ -57,12 +57,25 @@ export const sendOtp = async (phone) => {
   }, 400);
 };
 
+export const requestOtp = async (phone) => sendOtp(phone);
+
 /**
  * 2. OTP kodni tekshirish va kirish
  */
-export const verifyOtp = async ({ phone, code, rememberMe = true }) => {
+export const verifyOtp = async (paramsOrPhone, maybeCode, maybeRemember = true) => {
   return mockApiResponse(() => {
-    const cleanPhone = phone.replace(/\D/g, '');
+    let phone, code, rememberMe;
+    if (typeof paramsOrPhone === 'object' && paramsOrPhone !== null) {
+      phone = paramsOrPhone.phone;
+      code = paramsOrPhone.code;
+      rememberMe = paramsOrPhone.rememberMe ?? true;
+    } else {
+      phone = paramsOrPhone;
+      code = maybeCode;
+      rememberMe = maybeRemember ?? true;
+    }
+
+    const cleanPhone = String(phone || '').replace(/\D/g, '');
     const otps = getFromStorage(OTP_STORE_KEY, {});
     const activeOtp = otps[cleanPhone];
     const now = Date.now();

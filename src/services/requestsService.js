@@ -1,7 +1,7 @@
 import { delay, getFromStorage, setToStorage, STORAGE_KEYS, addAuditLog, addNotification } from './storage';
 import { REQUEST_STATUS, ALLOWED_TRANSITIONS } from '../constants/requestStatus';
 import { LISTING_STATUS } from '../constants/listingStatus';
-import { transitionListingStatus } from './listingsService';
+import { transitionListingStatus, checkListingHoldExpirations } from './listingsService';
 
 /**
  * Zayavka yuborish
@@ -119,12 +119,16 @@ export const checkExpiredPayments = async () => {
 
   for (let i = 0; i < requests.length; i += 1) {
     const req = requests[i];
-    if (!req.expiresAt) continue;
+    // To'lov bosqichi 24 soatlik `expiresAt`, shartnoma bosqichi 48 soatlik
+    // `contractExpiresAt` ishlatadi — ikkalasini ham hisobga olamiz.
+    const deadline = req.expiresAt || req.contractExpiresAt;
+    if (!deadline) continue;
+    const deadlineMs = new Date(deadline).getTime();
 
-    const isPaymentExpired = req.status === REQUEST_STATUS.PAYMENT_PENDING && new Date(req.expiresAt).getTime() < now;
+    const isPaymentExpired = req.status === REQUEST_STATUS.PAYMENT_PENDING && deadlineMs < now;
     const isContractExpired =
       (req.status === REQUEST_STATUS.PAID_ESCROW || req.status === REQUEST_STATUS.CONTRACT_DRAFTING) &&
-      new Date(req.expiresAt).getTime() < now;
+      deadlineMs < now;
 
     if (!isPaymentExpired && !isContractExpired) continue;
 

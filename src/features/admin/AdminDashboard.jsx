@@ -110,6 +110,16 @@ export const AdminDashboard = () => {
     }
   };
 
+  const handleAdminHandover = async (listingId) => {
+    try {
+      await handoverListing(listingId, 'user_admin');
+      toast.success('Uyni topshirish tasdiqlandi! Kontaktlar ochildi va elektron shartnoma avtomatik tuzildi.');
+      applyAdminData(await refreshAll());
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+
   return (
     <div className="container neo-admin-page">
       <div className="neo-admin-header">
@@ -145,6 +155,17 @@ export const AdminDashboard = () => {
           </Card>
 
           <Card padding="md" className="neo-stat-card">
+            <div className="neo-stat-icon-wrapper" style={{ color: 'var(--accent)' }}>
+              <Lock size={24} />
+            </div>
+            <div>
+              <small>Band qilingan uylar</small>
+              <div className="neo-stat-val">{reservedQueue.length}</div>
+              <span className="neo-stat-sub">Topshirish navbatida</span>
+            </div>
+          </Card>
+
+          <Card padding="md" className="neo-stat-card">
             <div className="neo-stat-icon-wrapper" style={{ color: 'var(--warning)' }}>
               <DollarSign size={24} />
             </div>
@@ -174,6 +195,7 @@ export const AdminDashboard = () => {
           tabs={[
             { id: 'users', label: t('admin.tab_users'), badge: stats?.pendingUsers },
             { id: 'listings', label: t('admin.tab_listings'), badge: stats?.pendingListings },
+            { id: 'reservations', label: 'Band qilinganlar (Reservations)', badge: reservedQueue.length },
             { id: 'escrow', label: t('admin.tab_escrow') },
             { id: 'disputes', label: t('admin.tab_disputes'), badge: stats?.disputesCount }
           ]}
@@ -307,6 +329,115 @@ export const AdminDashboard = () => {
               </tbody>
             </table>
           </div>
+        </Card>
+      )}
+
+      {/* TAB: BAND QILINGANLAR NAVBATI (RESERVATIONS QUEUE) */}
+      {activeTab === 'reservations' && (
+        <Card padding="lg">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <div>
+              <h3>Band qilinganlar (Reservations) navbati</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: 4 }}>
+                $30 Escrow toʻlangan uylar. Admin topshirgach kontaktlar ochiladi va elektron shartnoma generatsiya qilinadi.
+              </p>
+            </div>
+            <Badge variant="accent" size="md">
+              {reservedQueue.length} ta navbatda
+            </Badge>
+          </div>
+
+          {reservedQueue.length === 0 ? (
+            <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)' }}>
+              Ayni paytda band qilingan uylar mavjud emas.
+            </div>
+          ) : (
+            <div className="neo-table-responsive">
+              <table className="neo-table">
+                <thead>
+                  <tr>
+                    <th>Uy (Listing)</th>
+                    <th>Qidiruvchi (Mijoz)</th>
+                    <th>Toʻlov holati</th>
+                    <th>Tranzaksiya ID</th>
+                    <th>Holat & Muddat</th>
+                    <th>Amallar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reservedQueue.map(({ listing, request, tenant, owner }) => {
+                    const is100Paid = request?.isPaymentConfirmed === true;
+                    return (
+                      <tr key={listing.id}>
+                        <td>
+                          <strong>{listing.title}</strong>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                            {listing.address || listing.district} · ${listing.price} {listing.type === 'RENT' ? '/ oy' : ''}
+                          </div>
+                          {owner && (
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                              Ega: {owner.firstName} {owner.lastName} ({owner.phone})
+                            </div>
+                          )}
+                        </td>
+                        <td>
+                          {tenant ? (
+                            <div>
+                              <strong>{tenant.firstName} {tenant.lastName}</strong>
+                              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{tenant.phone}</div>
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--text-muted)' }}>Nomaʼlum</span>
+                          )}
+                        </td>
+                        <td>
+                          {is100Paid ? (
+                            <Badge variant="success" size="sm" icon={<ShieldCheck size={12} />}>
+                              100% Toʻlangan ($30)
+                            </Badge>
+                          ) : (
+                            <Badge variant="warning" size="sm" icon={<Clock size={12} />}>
+                              Toʻlov kutilmoqda
+                            </Badge>
+                          )}
+                        </td>
+                        <td>
+                          <code>{request?.paymentTransactionId || 'TXN-KUTILMOQDA'}</code>
+                        </td>
+                        <td>
+                          <Badge variant={listing.status === 'RESERVED' ? 'accent' : 'info'} size="sm">
+                            {listing.status === 'RESERVED' ? 'Band qilingan' : 'Topshirilmoqda'}
+                          </Badge>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                            48 soat shartnoma muddati
+                          </div>
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              disabled={!is100Paid || listing.status === 'HANDED_OVER'}
+                              icon={is100Paid ? <Unlock size={14} /> : <Lock size={14} />}
+                              onClick={() => handleAdminHandover(listing.id)}
+                              title={!is100Paid ? 'Toʻlov 100% tasdiqlanmaguncha uyni topshirish taqiqlanadi' : 'Kontaktlarni ochish va shartnoma tuzish'}
+                            >
+                              {listing.status === 'HANDED_OVER' ? 'Topshirilgan' : 'Uyni topshirish'}
+                            </Button>
+                            {!is100Paid && (
+                              <small style={{ color: 'var(--danger)', fontSize: '0.75rem' }}>
+                                Toʻlov kutilmoqda
+                              </small>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </Card>
       )}
 
