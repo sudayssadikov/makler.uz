@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Chip } from '../../components/ui/Chip';
 import { Avatar } from '../../components/ui/Avatar';
 import { ListingCard } from '../listings/ListingCard';
 import { getListings } from '../../services/listingsService';
-import { UZBEKISTAN_REGIONS } from '../../constants/regions';
+import { REGIONS_DATA } from '../../constants/regions';
 import {
   Sparkles,
   Compass,
@@ -23,9 +22,7 @@ import {
   Building,
   ArrowRight,
   Star,
-  Check,
-  XCircle,
-  Shield
+  XCircle
 } from 'lucide-react';
 import './HomePage.css';
 
@@ -39,7 +36,7 @@ export const HomePage = () => {
 
   // Hero Search Card state
   const [searchPurpose, setSearchPurpose] = useState('RENT'); // 'RENT' | 'SALE'
-  const [searchRegion, setSearchRegion] = useState('Toshkent shahri');
+  const [searchRegion, setSearchRegion] = useState('tashkent_city');
   const [searchRooms, setSearchRooms] = useState('');
   const [searchPrice, setSearchPrice] = useState('');
   const [isRoomByRoom, setIsRoomByRoom] = useState(false);
@@ -62,8 +59,9 @@ export const HomePage = () => {
     const params = new URLSearchParams();
     if (searchPurpose) params.set('purpose', searchPurpose);
     if (searchRegion) params.set('region', searchRegion);
-    if (searchRooms) params.set('rooms', searchRooms);
-    if (searchPrice) params.set('price', searchPrice);
+    if (searchRooms) params.set('rooms', searchRooms === '4' ? '4' : searchRooms);
+    // "100-300" kabi oraliq → SearchQuiz maksimal byudjetni (priceBracket) raqam kutadi
+    if (searchPrice) params.set('price', searchPrice.split('-')[1] || searchPrice);
     if (isRoomByRoom) params.set('rentType', 'ROOM');
     navigate(`/search?${params.toString()}`);
   };
@@ -225,9 +223,9 @@ export const HomePage = () => {
                   onChange={(e) => setSearchRegion(e.target.value)}
                   className="search-select-input"
                 >
-                  {UZBEKISTAN_REGIONS.map((r) => (
-                    <option key={r.id} value={r.name}>
-                      {r.name}
+                  {REGIONS_DATA.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.name.uz}
                     </option>
                   ))}
                 </select>
@@ -301,7 +299,7 @@ export const HomePage = () => {
           <div className="makler-quick-chips-row">
             <Chip
               icon={<MapPin size={14} />}
-              onClick={() => handleQuickChip('region', 'Toshkent shahri')}
+              onClick={() => handleQuickChip('region', 'tashkent_city')}
             >
               {t('home.chip_tashkent')}
             </Chip>
@@ -319,7 +317,7 @@ export const HomePage = () => {
             </Chip>
             <Chip
               icon={<MapPin size={14} />}
-              onClick={() => handleQuickChip('region', 'Samarqand viloyati')}
+              onClick={() => handleQuickChip('region', 'samarkand')}
             >
               {t('home.chip_samarkand')}
             </Chip>

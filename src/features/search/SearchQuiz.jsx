@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../components/ui/Card';
 import { Select } from '../../components/ui/Select';
@@ -32,6 +33,38 @@ const DEFAULT_CRITERIA = {
   amenities: []
 };
 const DEFAULT_SORT = 'match';
+
+// URL'dan kelgan qiymatlarni faqat ruxsat etilgan to'plamdan tekshirib,
+// noto'g'ri qiymatlar default'ga qaytadi (arxitekturani himoya qiladi).
+const pick = (value, allowed, fallback) =>
+  allowed.includes(value) ? value : fallback;
+
+// HomePage hero qidiruvi va quick chip'lari yuborgan parametrlarni o'qish.
+// Region/district id'lari, narx maksimal byudjet (raqam) sifatida keladi.
+const buildCriteriaFromParams = (params) => {
+  const purpose = pick(params.get('purpose'), ['RENT', 'SALE'], DEFAULT_CRITERIA.purpose);
+  const rentMode = pick(params.get('rentType'), ['ENTIRE', 'ROOM'], DEFAULT_CRITERIA.rentMode);
+  const regionParam = params.get('region');
+  const region = regionParam && REGIONS_DATA.some((r) => r.id === regionParam)
+    ? regionParam
+    : DEFAULT_CRITERIA.region;
+  const districtParam = params.get('district');
+  const district = districtParam ? districtParam : DEFAULT_CRITERIA.district;
+  const rooms = pick(params.get('rooms'), ['1', '2', '3', '4'], DEFAULT_CRITERIA.roomsCount);
+  const priceRaw = params.get('price');
+  const priceNumber = priceRaw && Number(priceRaw) > 0 ? String(Number(priceRaw)) : DEFAULT_CRITERIA.priceBracket;
+
+  return {
+    ...DEFAULT_CRITERIA,
+    purpose,
+    // Xona-xona faqat ijarada mantiqiy — sotuvda "ENTIRE" bo'lib qoladi
+    rentMode: purpose === 'SALE' ? DEFAULT_CRITERIA.rentMode : rentMode,
+    region,
+    district,
+    roomsCount: rooms,
+    priceBracket: priceNumber
+  };
+};
 
 const sortListingsPure = (list, sortType) => {
   const sorted = [...list];
@@ -76,9 +109,12 @@ const runSearchListings = async (criteria, sortType) => {
 
 export const SearchQuiz = () => {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
 
   // ONLY SELECT and segmented buttons — NO FREE TEXT!
-  const [criteria, setCriteria] = useState({ ...DEFAULT_CRITERIA });
+  // URL parametrlari (HomePage hero qidiruvi) birinchi renderda o'qiladi.
+  const [initialCriteria] = useState(() => buildCriteriaFromParams(searchParams));
+  const [criteria, setCriteria] = useState(initialCriteria);
 
   // Tumanlar hududdan kelib chiqadigan (derived) ro'yxat — useEffect + setState
   // o'rniga renderda hisoblanadi, ortiqcha render zanjiri bo'lmaydi.
@@ -122,15 +158,18 @@ export const SearchQuiz = () => {
 
   // Birinchi marta yuklanganda avtomatik qidiruvni boshlash. Toza modul
   // funksiyasi chaqiriladi — effect ichida setState zanjiri yo'q.
+  // initialCriteria bir marta hisoblanadi, shuning uchun dep'siz chaqiruv
+  // to'g'ri (qo'lda filtr o'zgartirilganda qayta ishlamaydi).
   useEffect(() => {
     let active = true;
-    runSearchListings(DEFAULT_CRITERIA, DEFAULT_SORT).then((initial) => {
+    runSearchListings(initialCriteria, DEFAULT_SORT).then((initial) => {
       if (active) {
         setResults(initial);
         setLoading(false);
       }
     });
     return () => { active = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- initialCriteria mount paytidagi URL parametrlarini o'z ichiga oladi
   }, []);
 
   return (
