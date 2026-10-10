@@ -68,6 +68,36 @@ export const ListingCard = ({ listing, matchScore = null }) => {
               </Badge>
             )}
 
+            {listing.status === 'HOLD' && (
+              <Badge variant="warning" size="sm">
+                Band qilinmoqda
+              </Badge>
+            )}
+
+            {listing.status === 'RESERVED' && (
+              <Badge variant="accent" size="sm">
+                Band qilingan
+              </Badge>
+            )}
+
+            {listing.status === 'HANDED_OVER' && (
+              <Badge variant="info" size="sm">
+                Topshirilmoqda
+              </Badge>
+            )}
+
+            {listing.status === 'RENTED' && (
+              <Badge variant="neutral" size="sm">
+                Ijaraga berildi
+              </Badge>
+            )}
+
+            {listing.status === 'SOLD' && (
+              <Badge variant="neutral" size="sm">
+                Sotildi
+              </Badge>
+            )}
+
             {matchScore !== null && (
               <Badge variant="success" size="sm" icon={<Percent size={12} />}>
                 {matchScore}% {t('listing.match')}

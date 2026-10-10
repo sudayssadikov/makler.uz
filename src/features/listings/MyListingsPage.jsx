@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { getMyListings, deleteListing, updateListing } from '../../services/listingsService';
+import { getListings, deleteListing, updateListing } from '../../services/listingsService';
 import { useAuthStore } from '../../store/authStore';
 import { toast } from '../../store/toastStore';
 import { PlusCircle, Trash2, Power, Eye } from 'lucide-react';
@@ -20,9 +20,11 @@ export const MyListingsPage = () => {
   // chaqiruvchi natijani o'z holatiga o'zi yozadi (effect ichida setState
   // chaqirilishi qoidaga xilof).
   const loadMyListings = useCallback(async () => {
-    // User yoki demo egasi bo'yicha olish
+    // User yoki demo egasi bo'yicha olish.
+    // includeAllStatus: egaga o'z e'lonlarining barcha holatlari kerak
+    // (INACTIVE, HOLD, RESERVED...) — umumiy qidiruvdan farqli.
     const ownerId = user?.id || 'user_owner_1';
-    return getMyListings(ownerId);
+    return getListings({ ownerId, includeAllStatus: true });
   }, [user?.id]);
 
   const applyMyListings = useCallback((data) => {
@@ -94,19 +96,50 @@ export const MyListingsPage = () => {
               />
 
               <div style={{ flex: 1, minWidth: 240 }}>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
-                  <Badge variant={item.status === 'ACTIVE' ? 'success' : 'warning'} size="sm">
-                    {item.status}
-                  </Badge>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                  {item.status === 'ACTIVE' && (
+                    <Badge variant="success" size="sm">Faol</Badge>
+                  )}
+                  {item.status === 'HOLD' && (
+                    <Badge variant="warning" size="sm">Band qilinmoqda (Hold)</Badge>
+                  )}
+                  {item.status === 'RESERVED' && (
+                    <Badge variant="accent" size="sm">Band qilingan (Reserved)</Badge>
+                  )}
+                  {item.status === 'HANDED_OVER' && (
+                    <Badge variant="info" size="sm">Topshirilmoqda</Badge>
+                  )}
+                  {item.status === 'RENTED' && (
+                    <Badge variant="neutral" size="sm">Ijaraga berilgan</Badge>
+                  )}
+                  {item.status === 'SOLD' && (
+                    <Badge variant="neutral" size="sm">Sotilgan</Badge>
+                  )}
                   <Badge variant="neutral" size="sm">
                     {item.type}
                   </Badge>
                 </div>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: 4 }}>{item.title}</h3>
                 <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
-                  ${item.price} / oy
+                  ${item.price} {item.type === 'RENT' ? '/ oy' : ''}
                 </div>
                 <small style={{ color: 'var(--text-muted)' }}>{item.address}</small>
+
+                {item.status === 'RESERVED' && (
+                  <div style={{ marginTop: 6, fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 600 }}>
+                    $30 Escrow toʻlangan · Admin tekshiruvi va shartnoma bosqichida
+                  </div>
+                )}
+                {item.status === 'HANDED_OVER' && (
+                  <div style={{ marginTop: 6, fontSize: '0.8rem', color: 'var(--info)', fontWeight: 600 }}>
+                    Admin uyni topshirgan · Shartnoma imzolash jarayonida
+                  </div>
+                )}
+                {item.status === 'HOLD' && (
+                  <div style={{ marginTop: 6, fontSize: '0.8rem', color: 'var(--warning)', fontWeight: 600 }}>
+                    Zayavka qabul qilingan · Mijoz toʻlovi kutilmoqda (24 soat)
+                  </div>
+                )}
               </div>
 
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
