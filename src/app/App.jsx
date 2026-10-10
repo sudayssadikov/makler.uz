@@ -4,11 +4,15 @@ import { AppRoutes } from './routes';
 import '../i18n/i18n';
 import '../styles/index.css';
 
+import { ErrorBoundary } from '../components/ui/ErrorBoundary';
+
 export function App() {
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

@@ -43,6 +43,7 @@ export const RequireAdmin = ({ children }) => {
   }, [isLoading, isAuthenticated, openLoginModal]);
 
   if (isLoading) return null;
-  if (!isAuthenticated || !isAdmin) return <Navigate to="/" replace />;
+  if (!isAuthenticated) return <Navigate to="/" replace />;
+  if (!isAdmin) return <Navigate to="/403" replace />;
   return children;
 };

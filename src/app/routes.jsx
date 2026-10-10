@@ -11,6 +11,7 @@ import { FavoritesPage } from '../features/listings/FavoritesPage';
 import { RequestsPage } from '../features/requests/RequestsPage';
 import { ContractsPage, ContractDetailsPage } from '../features/contracts/ContractsPage';
 import { AdminDashboard } from '../features/admin/AdminDashboard';
+import { ForbiddenPage } from '../features/common/ForbiddenPage';
 import { NotFoundPage } from '../features/common/NotFoundPage';
 
 export const AppRoutes = () => {
@@ -69,6 +70,7 @@ export const AppRoutes = () => {
             </RequireAdmin>
           }
         />
+        <Route path="403" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
