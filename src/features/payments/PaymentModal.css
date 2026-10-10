@@ -1,0 +1,46 @@
+.neo-escrow-security-callout {
+  display: flex;
+  gap: 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.neo-card-simulation-box {
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+
+.neo-card-chip {
+  width: 36px;
+  height: 26px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.neo-card-logo {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+
+.neo-pay-success-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: var(--radius-full);
+  background: var(--success-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}

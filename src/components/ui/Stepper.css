@@ -1,0 +1,83 @@
+.neo-stepper-wrapper {
+  width: 100%;
+  padding: 10px 0 20px;
+}
+
+.neo-stepper-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+}
+
+.neo-stepper-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  text-align: center;
+}
+
+.neo-stepper-indicator {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-flat-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  z-index: 2;
+  transition: var(--transition);
+}
+
+.neo-stepper-title {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  max-width: 110px;
+}
+
+.neo-stepper-line {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: 100%;
+  height: 3px;
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  z-index: 1;
+}
+
+/* Completed & current states */
+.neo-stepper-item.is-completed .neo-stepper-indicator {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.neo-stepper-item.is-completed .neo-stepper-line {
+  background: var(--primary);
+}
+
+.neo-stepper-item.is-completed .neo-stepper-title {
+  color: var(--primary);
+}
+
+.neo-stepper-item.is-current .neo-stepper-indicator {
+  box-shadow: var(--shadow-inset), 0 0 0 2px var(--primary);
+  color: var(--primary);
+  background: var(--bg-card);
+}
+
+.neo-stepper-item.is-current .neo-stepper-title {
+  color: var(--text-primary);
+  font-weight: 700;
+}

@@ -1,0 +1,168 @@
+/* ==========================================================================
+   MAKLER DESIGN TOKENS (NEUMORPHISM ARCHITECTURE)
+   100/100 World-Class Product Design System
+   ========================================================================== */
+
+:root {
+  /* --- LIGHT PALETTE --- */
+  --bg: #E8ECF6;
+  --surface: #EDF0F9;
+  --surface-2: #DFE5F2;
+  --bg-card: #EDF0F9;
+  --bg-input: #EDF0F9;
+  --shadow-dark: #BCC6DD;
+  --shadow-light: #FFFFFF;
+  --border: rgba(0, 0, 0, 0.06);
+  --border-subtle: rgba(0, 0, 0, 0.06);
+
+  /* Typography */
+  --text: #151B33;
+  --text-muted: #4F5B7D;
+  --text-faint: #7583A8;
+  --text-inverse: #FFFFFF;
+
+  /* Brand & Accents */
+  --primary: #4F5FF0;
+  --primary-hover: #3C4DE0;
+  --primary-contrast: #FFFFFF;
+  --primary-gradient: linear-gradient(135deg, #4F5FF0 0%, #7C4DEB 100%);
+  --primary-glow: 0 8px 30px rgba(79, 95, 240, 0.35);
+
+  --accent: #F59E0B;
+  --accent-hover: #D97706;
+  --accent-contrast: #FFFFFF;
+  --accent-gradient: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  --accent-glow: 0 8px 24px rgba(245, 158, 11, 0.32);
+
+  /* Status Colors */
+  --success: #1FA971;
+  --success-light: rgba(31, 169, 113, 0.15);
+  --warning: #D97706;
+  --warning-light: rgba(217, 119, 6, 0.15);
+  --danger: #DC2626;
+  --danger-light: rgba(220, 38, 38, 0.15);
+  --info: #2563EB;
+  --info-light: rgba(37, 99, 235, 0.15);
+
+  /* Neumorphic Elevations (Outset) */
+  --elev-1: 4px 4px 12px var(--shadow-dark), -4px -4px 12px var(--shadow-light);
+  --elev-2: 8px 8px 20px var(--shadow-dark), -8px -8px 20px var(--shadow-light);
+  --elev-3: 14px 14px 28px var(--shadow-dark), -14px -14px 28px var(--shadow-light);
+  --elev-hover: 10px 10px 24px var(--shadow-dark), -10px -10px 24px var(--shadow-light);
+
+  /* Neumorphic Insets (Pressed / Inputs / Active) */
+  --inset-1: inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
+  --inset-2: inset 5px 5px 12px var(--shadow-dark), inset -5px -5px 12px var(--shadow-light);
+  --inset-active: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+
+  /* Borders & Outlines */
+  --border-focus: var(--primary);
+  --ring-focus: 0 0 0 3px rgba(79, 95, 240, 0.3);
+
+  /* Spacing Scale (8px based) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Border Radii */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Typography Scales */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Manrope', 'Inter', sans-serif;
+
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 2rem;      /* 32px */
+  --text-4xl: 3rem;      /* 48px */
+  --text-5xl: 4rem;      /* 64px */
+
+  /* Micro-transitions */
+  --transition-fast: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 320ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Aliases */
+  --bg-main: var(--bg);
+  --bg-card-secondary: var(--surface);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+  --shadow-flat: var(--elev-2);
+  --shadow-flat-sm: var(--elev-1);
+  --shadow-flat-lg: var(--elev-3);
+  --shadow-inset: var(--inset-1);
+  --shadow-inset-deep: var(--inset-2);
+  --shadow-inset-active: var(--inset-active);
+  --transition: var(--transition-normal);
+}
+
+/* --- DARK PALETTE (PRIMARY DESIGN MODE) --- */
+[data-theme='dark'] {
+  --bg: #0D1020;
+  --surface: #131830;
+  --surface-2: #1A2040;
+  --bg-card: #131830;
+  --bg-input: #131830;
+  --shadow-dark: #070914;
+  --shadow-light: #1E2547;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+
+  /* Typography */
+  --text: #F1F4FF;
+  --text-muted: #A9B3D6;
+  --text-faint: #7782A8;
+  --text-inverse: #0D1020;
+
+  /* Brand & Accents */
+  --primary: #6C7CFF;
+  --primary-hover: #8794FF;
+  --primary-contrast: #FFFFFF;
+  --primary-gradient: linear-gradient(135deg, #6C7CFF 0%, #8B5CF6 100%);
+  --primary-glow: 0 8px 30px rgba(108, 124, 255, 0.35);
+
+  --accent: #FFB547;
+  --accent-hover: #FFA21A;
+  --accent-contrast: #0D1020;
+  --accent-gradient: linear-gradient(135deg, #FFB547 0%, #F59E0B 100%);
+  --accent-glow: 0 8px 24px rgba(255, 181, 71, 0.35);
+
+  /* Status Colors */
+  --success: #34D399;
+  --success-light: rgba(52, 211, 153, 0.18);
+  --warning: #FBBF24;
+  --warning-light: rgba(251, 191, 36, 0.18);
+  --danger: #F87171;
+  --danger-light: rgba(248, 113, 113, 0.18);
+  --info: #60A5FA;
+  --info-light: rgba(96, 165, 250, 0.18);
+
+  /* Neumorphic Elevations */
+  --elev-1: 4px 4px 12px var(--shadow-dark), -4px -4px 12px var(--shadow-light);
+  --elev-2: 8px 8px 20px var(--shadow-dark), -8px -8px 20px var(--shadow-light);
+  --elev-3: 14px 14px 28px var(--shadow-dark), -14px -14px 28px var(--shadow-light);
+  --elev-hover: 10px 10px 24px var(--shadow-dark), -10px -10px 24px var(--shadow-light);
+
+  --inset-1: inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
+  --inset-2: inset 5px 5px 12px var(--shadow-dark), inset -5px -5px 12px var(--shadow-light);
+  --inset-active: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+
+  --border-focus: var(--primary);
+  --ring-focus: 0 0 0 3px rgba(108, 124, 255, 0.35);
+}

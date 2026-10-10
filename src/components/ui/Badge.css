@@ -1,0 +1,55 @@
+.neo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  box-shadow: var(--shadow-flat-sm);
+  border: 1px solid var(--border-subtle);
+  user-select: none;
+}
+
+.neo-badge-sm {
+  padding: 3px 8px;
+  font-size: 0.75rem;
+}
+
+.neo-badge-md {
+  padding: 5px 12px;
+  font-size: 0.82rem;
+}
+
+.neo-badge-success {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.neo-badge-warning {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.neo-badge-danger {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.neo-badge-info {
+  background: var(--info-light);
+  color: var(--info);
+}
+
+.neo-badge-accent {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.neo-badge-neutral {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+.neo-badge-icon {
+  display: flex;
+  align-items: center;
+}

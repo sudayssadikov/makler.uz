@@ -1,0 +1,73 @@
+.neo-wizard-page {
+  padding-bottom: 50px;
+}
+
+.neo-wizard-header {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 30px;
+}
+
+.neo-wizard-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.neo-wizard-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.neo-wizard-box {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.neo-wizard-step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.neo-room-builder-card {
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  padding: 18px;
+  border-radius: var(--radius-lg);
+}
+
+.neo-room-thumb-preview {
+  position: relative;
+  width: 90px;
+  height: 65px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-flat-sm);
+}
+
+.neo-room-thumb-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.neo-photo-idx {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.neo-wizard-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}

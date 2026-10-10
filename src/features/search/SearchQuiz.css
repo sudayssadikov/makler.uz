@@ -1,0 +1,135 @@
+.neo-quiz-page {
+  padding-bottom: 50px;
+}
+
+.neo-quiz-header {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 30px;
+}
+
+.neo-quiz-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-flat-sm);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+.neo-quiz-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.neo-quiz-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.neo-quiz-box {
+  max-width: 850px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.neo-quiz-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.neo-quiz-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.neo-amenities-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.neo-amenity-select-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-flat-sm);
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.neo-amenity-select-pill:hover {
+  transform: translateY(-1px);
+}
+
+.neo-amenity-select-pill.is-selected {
+  box-shadow: var(--shadow-inset);
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--bg-input);
+}
+
+.neo-quiz-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.neo-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.neo-results-count {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.neo-results-sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .neo-quiz-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .neo-quiz-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+  .neo-quiz-actions button {
+    width: 100%;
+  }
+}

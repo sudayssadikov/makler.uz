@@ -1,0 +1,45 @@
+.neo-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  min-height: 42px;
+  border-radius: var(--radius-full);
+  background: var(--bg);
+  box-shadow: var(--elev-1);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.neo-chip-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elev-hover);
+  color: var(--text);
+  border-color: rgba(108, 124, 255, 0.2);
+}
+
+.neo-chip-btn.active,
+.neo-chip-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--inset-1);
+  color: var(--primary);
+  background: var(--bg);
+  border-color: rgba(108, 124, 255, 0.35);
+}
+
+.neo-chip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.neo-chip-btn.active .neo-chip-icon {
+  color: var(--primary);
+}

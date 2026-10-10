@@ -1,0 +1,160 @@
+.neo-contracts-page {
+  padding-bottom: 50px;
+}
+
+.neo-contracts-header {
+  margin-bottom: 24px;
+}
+
+.neo-contracts-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.neo-contracts-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.neo-contracts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.neo-contract-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.neo-contract-id {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.neo-contract-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+}
+
+/* Detail page paper view */
+.neo-contract-paper-view {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.neo-parties-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 14px;
+}
+
+.neo-party-card {
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  padding: 18px;
+  border-radius: var(--radius-md);
+}
+
+.neo-party-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.neo-party-card h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.neo-pinfl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.neo-address-box {
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  margin-top: 10px;
+}
+
+.neo-terms-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.neo-terms-table-row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.92rem;
+}
+
+.neo-deposit-clause-highlight {
+  display: flex;
+  gap: 12px;
+  background: var(--warning-light);
+  color: #92400e;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-top: 16px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.neo-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.neo-inventory-card {
+  background: var(--bg-card);
+  box-shadow: var(--shadow-flat-sm);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.neo-inventory-card img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+}
+
+.neo-inventory-info {
+  padding: 12px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .neo-parties-grid {
+    grid-template-columns: 1fr;
+  }
+}

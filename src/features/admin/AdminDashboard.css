@@ -1,0 +1,92 @@
+.neo-admin-page {
+  padding-bottom: 50px;
+}
+
+.neo-admin-header {
+  margin-bottom: 24px;
+}
+
+.neo-admin-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.neo-admin-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.neo-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.neo-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.neo-stat-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.neo-stat-card small {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.neo-stat-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.neo-stat-sub {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.neo-table-responsive {
+  overflow-x: auto;
+}
+
+.neo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.neo-table th {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 2px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.neo-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.neo-dispute-card {
+  background: var(--bg-input);
+  box-shadow: var(--shadow-inset);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+}
