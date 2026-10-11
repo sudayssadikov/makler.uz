@@ -108,6 +108,11 @@ Tizimda barcha funksiyalarni tez sinash uchun demo foydalanuvchilar tayyorlangan
 - **SMS OTP**: `123456`
 - **JSHSHIR**: `51402017890067`
 
+### 4. Platforma Agentlari (Staff Agents)
+- **Agent 1 (Toshkent)**: Farrux Zokirov (`+998 90 111 00 11`), SMS OTP: `123456`
+- **Agent 2 (Samarqand)**: Otabek Yoqubov (`+998 90 222 00 22`), SMS OTP: `123456`
+- **Paneli**: `/agent` (mobilga to'liq moslashgan ishchi panel)
+
 ---
 
 ## 🌟 Asosiy Xususiyatlar va Biznes Mantiq
@@ -122,9 +127,10 @@ Tizimda barcha funksiyalarni tez sinash uchun demo foydalanuvchilar tayyorlangan
    - Xona-xona rejimida har bir xonaning kamida **3 ta rasmi** va **kamchiliklari/sharoitlari** kiritilishi shart.
    - Oy oxirida to'lov tanlansa, kamida 1 oylik **Zalog (depozit)** va **minimal ijara muddati** kiritilishi majburiy.
    - Kadastr / egalik hujjati yuklanishi shart.
-4. **Zayavka va Escrow Holat Mashinasi (State Machine)**:
+4. **Zayavka, Ko'rsatish va Escrow Holat Mashinasi**:
    - Kontaktlar to'lovgacha **Yashirin**, to'lov va tasdiqdan keyin ochiladi.
-   - 30$ xizmat to'lovi **Click** yoki **Payme** orqali xavfsiz Escrowda ushlab turiladi.
+   - 30$ ko'rsatish xizmati haqi **Click** yoki **Payme** (yoki bepul kupon) orqali xavfsiz Escrowda ushlab turiladi.
+   - To'lov o'tgach, tizim avtomatik ravishda kam yuklamali platforma xodimiga (AGENT) ko'rsatish vazifasini biriktiradi.
    - Ega 48 soat ichida harakat qilmasa, 48h kafolat taymeri orqali pul 100% qaytariladi.
 5. **Elektron Shartnoma va Uy Holati Akti**:
    - E'lon ma'lumotlaridan avtomatik generatsiya (JSHSHIR, to'lov, zalog, qoidalar).
@@ -147,42 +153,78 @@ Tizimda barcha funksiyalarni tez sinash uchun demo foydalanuvchilar tayyorlangan
 
 ---
 
-## 🧪 Qo'lda Sinash Yo'riqnomasi (Manual Test Scenarios a-g)
+## 🧪 Qo'lda Sinash Yo'riqnomasi (Manual Test Scenarios a-i)
 
-### Ssenariy (a): ACTIVE → HOLD (24 soatlik taymer)
-1. Qidiruvchi hisobida (`Jasur Mansurov`) tizimga kiring yoki ro'yxatdan o'ting.
-2. Ixtiyoriy faol e'lonni tanlab, **"Zayavka yuborish"** tugmasini bosing.
-3. Navbar'dagi tezkor almashtirgich orqali Ega hisobiga (`Azizbek Qodirov`) o'ting.
-4. **"Zayavkalar"** sahifasiga kiring va yangi arizani **"Qabul qilish"** (Accept) qiling.
-5. **Natija**: E'lon holati `HOLD` ga o'tadi, 24 soatlik teskari hisob taymeri paydo bo'ladi. Audit jurnaliga yozuv qo'shiladi va qidiruvchiga xabarnoma boradi.
+### Ssenariy (a): To'lov → Avto-vazifa yaratilishi → Agent biriktirish
+1. Qidiruvchi hisobida zayavkani qabul qildirib, 30$ to'lovni bajaring.
+2. Tizim darhol `createViewingTask` chaqiradi va Toshkent hududidagi eng kam yuklamali agentga (Farrux Zokirov) vazifani biriktiradi.
+3. Admin panelida "Koʻrsatishlar & SLA" tabida yangi vazifa ko'rinadi.
 
-### Ssenariy (b): HOLD paytida boshqa foydalanuvchi kirganda
-1. Uchinchi foydalanuvchi sifatida tizimga kiring (yoki Guest rejimda).
-2. HOLD holatidagi e'lon sahifasiga kiring.
-3. **Natija**: E'londa sariq rangli **"Koʻrib chiqilmoqda (HOLD)"** belgisi va 24 soatlik taymer ko'rinadi. **"Zayavka yuborish"** tugmasi nofaol (disabled) bo'lib, *"Ushbu eʼlon boshqa foydalanuvchi tomonidan koʻrib chiqilmoqda"* xabari chiqadi. Boshqa foydalanuvchi to'lov qila olmaydi.
+### Ssenariy (b): Agentni almashtirish / qayta tayinlash
+1. Admin Dashboard → "Koʻrsatishlar & SLA" bo'limiga kiring.
+2. Vazifa qatoridagi agent tanlash dropdownidan boshqa agentni tanlang.
+3. Natija: Yangi agentga bildirishnoma boradi va vazifa uning `/agent` paneliga ko'chadi.
 
-### Ssenariy (c): HOLD → RESERVED ($30 Escrow to'lovi va yashirish)
-1. Ariza egasi (Foydalanuvchi A) hisobiga kiring va arizalar sahifasiga o'ting.
-2. **"30$ Escrow toʻlash"** tugmasini bosing va Payme / Click orqali to'lovni tasdiqlang.
-3. **Natija**: E'lon darhol `RESERVED` holatiga o'tadi. Bosh sahifa, aqlli qidiruv va tavsiyalar ro'yxatidan yo'qoladi. E'longa to'g'ridan-to'g'ri link orqali kirilganda **"Bu uy band qilingan"** maxsus banneri va o'sha tuman/narxdagi faol o'xshash uylar taklif etiladi.
+### Ssenariy (c): Vaqt kelishish va qayta rejalash
+1. `/agent` paneliga kiring, vazifa bo'yicha "Vaqt taklif qilish" tugmasini bosing va 2 ta vaqt kiriting.
+2. Mijoz o'zining "Zayavkalar" sahifasida vaqtni tasdiqlaydi (`SCHEDULE_CONFIRMED`).
+3. Qayta rejalashtirish chegarasi: har tomondan ko'pi bilan 2 martagacha.
 
-### Ssenariy (d): Raqobatchi arizalarni avtomatik rad etish
-1. Bir vaqtning o'zida bitta e'longa 2 ta foydalanuvchi zayavka yuborgan bo'lsin.
-2. Ega ulardan birini qabul qilib, o'sha foydalanuvchi to'lovni bajarsin (`RESERVED`).
-3. **Natija**: Shu e'longa berilgan boshqa barcha `PENDING`/`SUBMITTED` arizalar avtomatik tarzda `REJECTED` qilinadi, sababi *"Uy band qilindi"* deb belgilanadi va tegishli foydalanuvchilarga xabarnoma yuboriladi.
+### Ssenariy (d): Ko'rsatish kuni "Mijoz yoqtirdi" → Shartnoma
+1. Agent `/agent` panelida "Boshladim (Joydaman)" tugmasini bosadi (`IN_PROGRESS`).
+2. "Natijani kiritish" tugmasini bosib, checklist to'ldiradi va "Mijoz yoqtirdi (Liked)" variantini tanlaydi.
+3. Natija: Zayavka `CONTRACT_DRAFTING` ga o'tadi va elektron shartnoma tayyorlanadi.
 
-### Ssenariy (e): Xona-xona ijarada xonani band qilish
-1. Xona-xona ijaraga qo'yilgan ko'p xonali e'longa (masalan, 3 xonali kvartira) kiring.
-2. 1-xona uchun zayavka topshiring va to'lovni bajaring.
-3. **Natija**: Faqat 1-xona `isReserved: true` holatiga o'tadi. Umumiy e'lon faol bo'lib qoladi va qolgan xonalar boshqa talabgorlar uchun ochiq turadi. Barcha xonalar band bo'lgandagina umumiy e'lon `RESERVED` holatiga o'tadi.
+### Ssenariy (e): "Mijoz yoqtirmadi" → 14 kunlik bepul kupon
+1. Agent ko'rsatish natijasida "Yoqtirmadi (Disliked)" deb tanlaydi va sababini yozadi.
+2. Natija: Mijozga 14 kunlik bepul qayta ko'rsatish kuponi (`VIEW-FREE-XXXX`) beriladi. Keyingi to'lov oynasida "Kupon bilan toʻlash ($0)" varianti avtomatik faollashadi.
 
-### Ssenariy (f): Ega uchun "Mening e'lonlarim" nazorati
-1. Ega hisobiga kiring va **"Mening e'lonlarim"** bo'limiga o'ting.
-2. **Natija**: Har bir e'lonning aniq bosqichi ko'rinadi: `Faol`, `Koʻrib chiqilmoqda (24s qoldi)`, `Band qilingan (Escrow toʻlangan)`, `Topshirilmoqda` yoki `Ijara yakunlangan`.
+### Ssenariy (f): "Uy e'londagidek emas" → 100% qaytarish va moderatsiya
+1. Agent "Uy eʼlondagidek emas (MISMATCH)" tanlaydi.
+2. Natija: 30$ to'lov 100% ijarachiga qaytariladi (`REFUNDED`), e'lon esa qayta moderatsiyaga yuboriladi.
 
-### Ssenariy (g): Admin tekshiruvi va "Uyni topshirish"
-1. Admin hisobiga (`Sherzod Adminov`) o'ting va **Admin Dashboard**ga kiring.
-2. **"Band qilinganlar (Reservations) navbati"** tabini oching.
-3. **Natija**: Jadvalda e'lon, qidiruvchi, to'lov holati ($30), tranzaksiya ID si (`TXN-...`) va muddat ko'rinadi.
-4. To'lov 100% tasdiqlangan bo'lsa **"Uyni topshirish"** tugmasi ochiladi (tasdiqlanmagan bo'lsa bloklanadi).
-5. Tugma bosilganda e'lon `HANDED_OVER` ga o'tadi, har ikki tomon kontaktlari ochiladi va avtomatik elektron shartnoma loyihasi tuziladi.
+### Ssenariy (g): Ega kelmadi yoki Mijoz kelmadi
+1. "Ega kelmadi" tanlanganda — mijozga 100% qaytariladi, mulk egasiga reyting jarimasi belgilanadi.
+2. "Mijoz kelmadi" tanlanganda — pul qaytarilmaydi, 1 marta qayta rejalashtirish imkoni beriladi.
+
+### Ssenariy (h): SLA kechikishi (6h / 48h) va Eskalatsiya
+1. To'lovdan keyin 6 soat ichida agent tayinlanmasa yoki 48 soatda ko'rsatish bo'lmasa, admin panelida qizil "Eskalatsiya (Kechikkan)" belgisi yonadi va 100% qaytarish kafolati ishga tushadi.
+
+### Ssenariy (i): Agentlar xavfsizlik izolatsiyasi
+1. Agent A (`Farrux Zokirov`) kirganida faqat o'ziga biriktirilgan vazifalarni ko'radi (`/agent`).
+2. Agent B (`Otabek Yoqubov`) vazifalarini ko'ra olmaydi va tahrirlay olmaydi.
+
+---
+
+## 🚀 Deploy Qilish (Vercel va Netlify)
+
+### Vercel:
+Loyiha ildizida `vercel.json` fayli mavjud:
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+CLI orqali:
+```bash
+npx vercel --prod
+```
+
+### Netlify:
+`public/_redirects` faylida SPA rewrite sozlangan:
+```text
+/*    /index.html   200
+```
+
+---
+
+## 📋 5-10 ta Sinovchiga Beriladigan Savollar Ro'yxati (UX/Product Feedback)
+
+1. **30$ Ko'rsatish xizmati narxi**: Platforma xodimi uyni sizga o'zi borib ko'rsatishi va qonuniy shartnoma tuzishi uchun 30$ to'lashga rozimisiz?
+2. **Xona-xona ijara modeli**: Talabalar va yoshlar uchun alohida xonalarni ijaraga olish imkoniyati qanchalik qulay?
+3. **Xodim ko'rsatishi ishonch beradimi**: An'anaviy "vositachisiz" yolg'onlaridan ko'ra rasmiy platforma xodimi ishtiroki ishonch bag'ishladimi?
+4. **Qaytarish va Kupon qoidasi**: Agar uy yoqmasa, 14 kunlik bepul kupon berilishi adolatlimi?
+5. **Nima tushunarsiz yoki noqulay bo'ldi**: Interfeys yoki to'lov jarayonida qaysi qadam qiyinchilik tug'dirdi?
+
