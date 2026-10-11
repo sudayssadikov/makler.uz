@@ -1,5 +1,14 @@
 import { create } from 'zustand';
-import { sendOtp, verifyOtp, loginWithGoogleAccount, registerUser, resubmitVerificationDocs, logoutApi } from '../services/api/authService';
+import {
+  sendOtp,
+  verifyOtp,
+  loginWithGoogleAccount,
+  registerUser,
+  resubmitVerificationDocs,
+  logoutApi,
+  loginStaff as loginStaffApi,
+  verifyStaffOtp as verifyStaffOtpApi
+} from '../services/api/authService';
 import { getProfileApi } from '../services/api/userService';
 import { getAccessToken, decodeJwt, isTokenExpired, clearTokens } from '../utils/tokenUtils';
 import { toast } from './toastStore';
@@ -152,6 +161,42 @@ export const useAuthStore = create((set, get) => ({
     return user;
   },
 
+  // 4b. Xodimlar kirishi: Login + Parol (1-bosqich)
+  loginStaff: async ({ identifier, password }) => {
+    const res = await loginStaffApi({ identifier, password });
+    if (res.error) {
+      toast.error(res.error.message);
+      throw res.error;
+    }
+    return res.data;
+  },
+
+  // 4c. Xodimlar 2-bosqichli OTP tasdiqlashi (2-bosqich)
+  verifyStaffOtp: async ({ phone, code, rememberMe = true }) => {
+    const res = await verifyStaffOtpApi({ phone, code, rememberMe });
+    if (res.error) {
+      toast.error(res.error.message);
+      throw res.error;
+    }
+
+    const { user, tokens } = res.data;
+    const decoded = decodeJwt(tokens.accessToken);
+    const role = user.role;
+
+    set({
+      user,
+      role,
+      status: user.status || user.verificationStatus,
+      isAdmin: role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'MODERATOR' || role === 'FINANCE' || role === 'SUPPORT',
+      isAgent: role === 'AGENT',
+      isAuthenticated: true,
+      sessionExpiresAt: decoded?.exp ? decoded.exp * 1000 : null
+    });
+
+    toast.success(`Xush kelibsiz, ${user.firstName || 'Xodim'}!`);
+    return user;
+  },
+
   // 5. Ko'p bosqichli ro'yxatdan o'tish
   register: async (formData) => {
     const res = await registerUser(formData);
@@ -205,27 +250,6 @@ export const useAuthStore = create((set, get) => ({
     toast.info('Tizimdan chiqdingiz');
     // Boshqa tablarni xabardor qilish
     localStorage.setItem('makler_tab_logout', Date.now().toString());
-  },
-
-  // Demo Switcher
-  switchRole: (targetRole) => {
-    const currentUser = get().user;
-    if (!currentUser) return;
-    const isTargetAdmin = targetRole === 'ADMIN' || targetRole === 'SUPER_ADMIN' || targetRole === 'MODERATOR' || targetRole === 'FINANCE' || targetRole === 'SUPPORT';
-    const isTargetAgent = targetRole === 'AGENT';
-    const updated = {
-      ...currentUser,
-      role: targetRole,
-      status: isTargetAdmin ? 'VERIFIED' : currentUser.status
-    };
-    set({
-      user: updated,
-      role: targetRole,
-      status: updated.status,
-      isAdmin: isTargetAdmin,
-      isAgent: isTargetAgent
-    });
-    toast.success(`Rol almashtirildi: ${targetRole}`);
   }
 }));
 
