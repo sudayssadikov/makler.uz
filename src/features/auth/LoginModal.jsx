@@ -23,20 +23,37 @@ export const LoginModal = () => {
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [phoneError, setPhoneError] = useState('');
+  const [resendTimer, setResendTimer] = useState(60);
+  const [expireTimer, setExpireTimer] = useState(300);
   const [otpError, setOtpError] = useState('');
   const [shake, setShake] = useState(false);
-
   const otpInputRefs = useRef([]);
 
+  // Timer interval for resend & expire countdowns
+  useEffect(() => {
+    let timerInterval = null;
+    if (step === 'otp') {
+      timerInterval = setInterval(() => {
+        setResendTimer((prev) => (prev > 0 ? prev - 1 : 0));
+        setExpireTimer((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+    return () => {
+      if (timerInterval) clearInterval(timerInterval);
+    };
+  }, [step]);
+
   // Modal 'otp' bosqichiga o'tganda birinchi katakka fokus beriladi.
-  // (DOM side-effect — setState emas, shuning uchun effect to'g'ri.)
+  // Faqat DOM manipulyatsiyasi (external system) — taymer reset'lari
+  // 'otp'ga o'tish hodisasida (handlePhoneSubmit) bajariladi.
   useEffect(() => {
     if (isLoginModalOpen && step === 'otp') {
-      setTimeout(() => {
+      const focusTimer = setTimeout(() => {
         if (otpInputRefs.current[0]) {
           otpInputRefs.current[0].focus();
         }
       }, 100);
+      return () => clearTimeout(focusTimer);
     }
   }, [isLoginModalOpen, step]);
 
@@ -80,6 +97,9 @@ export const LoginModal = () => {
       // Demo qulayligi: mock SMS kod 123456 avtomatik to'ldiriladi.
       // (Event hodisasida to'ldiriladi — effect ichida emas.)
       setOtpDigits(['1', '2', '3', '4', '5', '6']);
+      // 60s qayta yuborish va 300s eskish taymerlari 'otp'ga o'tishda resetlanadi.
+      setResendTimer(60);
+      setExpireTimer(300);
       setStep('otp');
       setOtpError('');
     } catch (err) {
@@ -312,6 +332,40 @@ export const LoginModal = () => {
                   {otpError}
                 </div>
               )}
+
+              {/* Taymerlar: 5 daqiqa eskirish va 60 soniya qayta yuborish */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem', marginTop: 10, color: 'var(--text-muted)' }}>
+                <span>
+                  Muddati:{' '}
+                  <strong style={{ color: expireTimer < 60 ? 'var(--danger)' : 'var(--text-primary)' }}>
+                    {Math.floor(expireTimer / 60)}:{String(expireTimer % 60).padStart(2, '0')}
+                  </strong>
+                </span>
+
+                {resendTimer > 0 ? (
+                  <span>Qayta yuborish ({resendTimer}s)</span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        setLoading(true);
+                        await requestOtp(phone);
+                        setResendTimer(60);
+                        setExpireTimer(300);
+                        setOtpError('');
+                      } catch (err) {
+                        setOtpError(getErrorMessage(err));
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                    style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontWeight: 600 }}
+                  >
+                    Kodni qayta yuborish
+                  </button>
+                )}
+              </div>
             </div>
 
             <div style={{ display: 'flex', gap: 12, marginTop: 6 }}>
