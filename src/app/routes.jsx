@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
-import { RequireAuth, RequireAdmin } from './guards';
+import { RequireAuth, RequireAdmin, VerifiedRoute } from './guards';
 import { HomePage } from '../features/home/HomePage';
 import { SearchQuiz } from '../features/search/SearchQuiz';
 import { ListingDetails } from '../features/listings/ListingDetails';
@@ -11,6 +11,7 @@ import { FavoritesPage } from '../features/listings/FavoritesPage';
 import { RequestsPage } from '../features/requests/RequestsPage';
 import { ContractsPage, ContractDetailsPage } from '../features/contracts/ContractsPage';
 import { AdminDashboard } from '../features/admin/AdminDashboard';
+import { GuidePage } from '../features/guide/GuidePage';
 import { ForbiddenPage } from '../features/common/ForbiddenPage';
 import { NotFoundPage } from '../features/common/NotFoundPage';
 
@@ -20,13 +21,14 @@ export const AppRoutes = () => {
       <Route path="/" element={<AppLayout />}>
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchQuiz />} />
+        <Route path="guide" element={<GuidePage />} />
         <Route path="listings/:id" element={<ListingDetails />} />
         <Route
           path="add-listing"
           element={
-            <RequireAuth>
+            <VerifiedRoute>
               <CreateListingWizard />
-            </RequireAuth>
+            </VerifiedRoute>
           }
         />
         <Route

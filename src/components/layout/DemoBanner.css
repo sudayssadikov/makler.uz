@@ -1,0 +1,102 @@
+.demo-banner-root {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.8rem;
+  padding: 6px 0;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 101;
+}
+
+.demo-banner-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.demo-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.demo-sparkle-icon {
+  color: var(--accent);
+}
+
+.demo-banner-text {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.demo-banner-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.demo-roles-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.demo-roles-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.demo-role-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-flat);
+  transition: all var(--transition);
+}
+
+.demo-role-btn:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.demo-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.demo-action-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--primary);
+}
+
+.demo-reset-btn {
+  color: var(--danger);
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+.demo-reset-btn:hover {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--danger);
+}
