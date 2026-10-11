@@ -13,6 +13,7 @@ import {
   getReservedListingsQueue,
   handoverListing
 } from '../../services/adminService';
+import { getAllViewings, assignViewingAgent } from '../../services/viewingService';
 import { getFromStorage, STORAGE_KEYS } from '../../services/storage';
 import { toast } from '../../store/toastStore';
 import {
@@ -31,12 +32,14 @@ import './AdminDashboard.css';
 
 export const AdminDashboard = () => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('users'); // 'users' | 'listings' | 'reservations' | 'escrow' | 'disputes'
+  const [activeTab, setActiveTab] = useState('users'); // 'users' | 'listings' | 'reservations' | 'viewings' | 'escrow' | 'disputes'
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [listings, setListings] = useState([]);
   const [requests, setRequests] = useState([]);
   const [reservedQueue, setReservedQueue] = useState([]);
+  const [viewings, setViewings] = useState([]);
+  const [currentTime] = useState(() => Date.now());
 
   // Admin paneli ma'lumotlarini yangilash. Handlers (tugmalar) uchun ham,
   // sahifa ochilgandagi effect uchun ham bir xil manba — lekin har bir
@@ -45,12 +48,14 @@ export const AdminDashboard = () => {
   const refreshAll = useCallback(async () => {
     const s = await getAdminStats();
     const queue = await getReservedListingsQueue();
+    const vList = await getAllViewings();
     return {
       stats: s,
       users: getFromStorage(STORAGE_KEYS.USERS, []),
       listings: getFromStorage(STORAGE_KEYS.LISTINGS, []),
       requests: getFromStorage(STORAGE_KEYS.REQUESTS, []),
-      reservedQueue: queue
+      reservedQueue: queue,
+      viewings: vList || []
     };
   }, []);
 
@@ -60,6 +65,7 @@ export const AdminDashboard = () => {
     setListings(data.listings);
     setRequests(data.requests);
     setReservedQueue(data.reservedQueue || []);
+    setViewings(data.viewings || []);
   }, []);
 
   useEffect(() => {
@@ -119,6 +125,22 @@ export const AdminDashboard = () => {
       toast.error(e.message);
     }
   };
+
+  // Agentlar ro'yxati: faqat AGENT roli bo'lgan foydalanuvchilar (viewing tab select'i uchun)
+  const agentsList = users.filter((u) => u.role === 'AGENT');
+
+  // Ko'rsatish vazifasiga agent biriktirish (SLA: 6 soat ichida tasdiqlash shart)
+  const handleAssignAgent = async (viewingId, agentId) => {
+    if (!agentId) return; // Bo'sh tanlov — o'zgarish qilmaydi
+    try {
+      await assignViewingAgent(viewingId, agentId);
+      toast.success('Agent biriktirildi. SLA nazorati yoqildi.');
+      applyAdminData(await refreshAll());
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+
 
   return (
     <div className="container neo-admin-page">
@@ -429,6 +451,110 @@ export const AdminDashboard = () => {
                                 Toʻlov kutilmoqda
                               </small>
                             )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* TAB: VIEWINGS & SLA */}
+      {activeTab === 'viewings' && (
+        <Card padding="lg">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <div>
+              <h3>Koʻrsatishlar va SLA Nazorati (Platforma Agentlari)</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+                Toʻlovdan keyin 6 soatda agent biriktirilishi va 48 soat ichida koʻrsatish shart. Kechiksa avtomatik eskalatsiya.
+              </p>
+            </div>
+          </div>
+
+          {viewings.length === 0 ? (
+            <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)' }}>
+              Ayni paytda faol koʻrsatish vazifalari mavjud emas.
+            </div>
+          ) : (
+            <div className="neo-table-responsive">
+              <table className="neo-table">
+                <thead>
+                  <tr>
+                    <th>Vazifa ID & Manzil</th>
+                    <th>Biriktirilgan Agent</th>
+                    <th>Holati</th>
+                    <th>SLA Muddati (48h)</th>
+                    <th>Natija</th>
+                    <th>Amallar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {viewings.map((v) => {
+                    const assignedAgent = users.find((u) => u.id === v.agentId);
+                    const isSlaBreached = new Date(v.slaDeadline).getTime() < currentTime && v.status !== 'COMPLETED';
+
+                    return (
+                      <tr key={v.id}>
+                        <td>
+                          <strong>{v.address}</strong>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                            ID: {v.id} · Zayavka: {v.requestId}
+                          </div>
+                        </td>
+                        <td>
+                          {assignedAgent ? (
+                            <div>
+                              <strong>{assignedAgent.firstName} {assignedAgent.lastName}</strong>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{assignedAgent.phone}</div>
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--danger)', fontWeight: 600 }}>Tayinlanmagan</span>
+                          )}
+                        </td>
+                        <td>
+                          <Badge variant={v.status === 'COMPLETED' ? 'success' : v.status === 'SCHEDULE_CONFIRMED' ? 'accent' : 'warning'}>
+                            {v.status}
+                          </Badge>
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <Clock size={14} color={isSlaBreached ? 'var(--danger)' : 'var(--text-muted)'} />
+                            <span style={{ color: isSlaBreached ? 'var(--danger)' : 'inherit', fontWeight: isSlaBreached ? 700 : 500 }}>
+                              {new Date(v.slaDeadline).toLocaleDateString()}
+                            </span>
+                          </div>
+                          {isSlaBreached && (
+                            <Badge variant="danger" size="sm" style={{ marginTop: 4 }}>
+                              Eskalatsiya (Kechikkan)
+                            </Badge>
+                          )}
+                        </td>
+                        <td>
+                          {v.outcome ? (
+                            <Badge variant="neutral">{v.outcome}</Badge>
+                          ) : (
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Jarayonda</span>
+                          )}
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                            <select
+                              className="neo-select"
+                              style={{ padding: '4px 8px', fontSize: '0.8rem' }}
+                              value={v.agentId || ''}
+                              onChange={(e) => handleAssignAgent(v.id, e.target.value)}
+                            >
+                              <option value="">Agent tanlang</option>
+                              {agentsList.map((a) => (
+                                <option key={a.id} value={a.id}>
+                                  {a.firstName} {a.lastName} ({a.assignedRegion || 'Toshkent'})
+                                </option>
+                              ))}
+                            </select>
                           </div>
                         </td>
                       </tr>
