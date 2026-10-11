@@ -1,42 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../../store/authStore';
-import { resetDemoStorage } from '../../services/storage';
-import { toast } from '../../store/toastStore';
-import { Sparkles, RotateCcw, User, Shield, Home, BookOpen } from 'lucide-react';
+import { Sparkles, BookOpen } from 'lucide-react';
 import './DemoBanner.css';
 
 export const DemoBanner = () => {
   const { i18n } = useTranslation();
-  const { switchRole } = useAuthStore();
   const navigate = useNavigate();
 
   // Agar demo rejimi o'chirilgan bo'lsa (masalan VITE_DEMO_MODE=false), banner ko'rinmaydi
   const isDemo = import.meta.env.VITE_DEMO_MODE !== 'false';
   if (!isDemo) return null;
-
-  const handleResetData = () => {
-    if (window.confirm('Barcha demo maʼlumotlar boshlangʻich holatga qaytarilsinmi?')) {
-      resetDemoStorage();
-      toast.success('Demo maʼlumotlar muvaffaqiyatli tiklandi!');
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    }
-  };
-
-  const handleQuickSwitch = (role) => {
-    switchRole(role);
-    toast.info(`Rol ${role} ga almashtirildi`);
-    // Eslatma: AGENT paneli hozircha mavjud emas (faqat service qatlamida),
-    // shuning uchun Agent tugmasi banner'dan olib tashlangan.
-    if (role === 'ADMIN') {
-      navigate('/admin');
-    } else {
-      navigate('/');
-    }
-  };
 
   const getBannerText = () => {
     const lang = i18n.language || 'uz';
@@ -58,37 +32,6 @@ export const DemoBanner = () => {
         </div>
 
         <div className="demo-banner-right">
-          <div className="demo-roles-group">
-            <span className="demo-roles-label">Tez kirish:</span>
-            <button
-              type="button"
-              className="demo-role-btn"
-              onClick={() => handleQuickSwitch('USER')}
-              title="Qidiruvchi (Jasur Mansurov) sifatida"
-            >
-              <User size={12} />
-              <span>Qidiruvchi</span>
-            </button>
-            <button
-              type="button"
-              className="demo-role-btn"
-              onClick={() => handleQuickSwitch('OWNER')}
-              title="Uy egasi (Azizbek Qodirov) sifatida"
-            >
-              <Home size={12} />
-              <span>Ega</span>
-            </button>
-            <button
-              type="button"
-              className="demo-role-btn"
-              onClick={() => handleQuickSwitch('ADMIN')}
-              title="Admin sifatida"
-            >
-              <Shield size={12} />
-              <span>Admin</span>
-            </button>
-          </div>
-
           <button
             type="button"
             className="demo-action-btn"
@@ -97,16 +40,6 @@ export const DemoBanner = () => {
           >
             <BookOpen size={12} />
             <span>Qoʻllanma</span>
-          </button>
-
-          <button
-            type="button"
-            className="demo-action-btn demo-reset-btn"
-            onClick={handleResetData}
-            title="Barcha oʻzgarishlarni boshlangʻich holatga qaytarish"
-          >
-            <RotateCcw size={12} />
-            <span>Maʼlumotni tiklash</span>
           </button>
         </div>
       </div>

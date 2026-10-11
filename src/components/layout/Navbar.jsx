@@ -24,8 +24,7 @@ import {
   AlertTriangle,
   Menu,
   X,
-  Sparkles,
-  Sliders
+  Sparkles
 } from 'lucide-react';
 import './Navbar.css';
 
@@ -38,8 +37,7 @@ export const Navbar = () => {
     isAdmin,
     openLoginModal,
     openRegisterModal,
-    logout,
-    switchRole
+    logout
   } = useAuthStore();
 
   const [scrolled, setScrolled] = useState(false);
@@ -181,6 +179,7 @@ export const Navbar = () => {
                 <span>{t('nav.admin')}</span>
               </NavLink>
             )}
+
           </nav>
 
           {/* 3. Right Action Tools */}
@@ -364,19 +363,19 @@ export const Navbar = () => {
                       <span>{t('nav.contracts')}</span>
                     </button>
 
-                    {/* Demo Role Switcher inside menu */}
-                    <div className="profile-menu-divider" />
-                    <button
-                      type="button"
-                      className="makler-menu-item role-toggle-item"
-                      onClick={() => {
-                        switchRole(isAdmin ? 'USER' : 'ADMIN');
-                      }}
-                    >
-                      <Sliders size={16} />
-                      <span>Rolni almashtirish:</span>
-                      <strong className="role-tag">{isAdmin ? 'ADMIN' : 'USER'}</strong>
-                    </button>
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        className="makler-menu-item"
+                        onClick={() => {
+                          navigate('/admin');
+                          setAvatarDropdownOpen(false);
+                        }}
+                      >
+                        <Shield size={16} />
+                        <span>Boshqaruv paneli (Admin)</span>
+                      </button>
+                    )}
 
                     <div className="profile-menu-divider" />
 
