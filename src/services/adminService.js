@@ -1,6 +1,7 @@
 import { delay, getFromStorage, setToStorage, STORAGE_KEYS } from './storage';
 import { REQUEST_STATUS, USER_VERIFICATION_STATUS } from '../constants/requestStatus';
-import { transitionRequestStatus } from './requestsService';
+// Tsikllanish yo'q: requestsService adminService'ni import qilmaydi
+import { transitionRequestStatus, handoverListingByAdmin } from './requestsService';
 
 /**
  * Admin uchun umumiy statistikalarni olish
@@ -138,6 +139,5 @@ export const getReservedListingsQueue = async () => {
  * Admin "Uyni topshirish" qilishi
  */
 export const handoverListing = async (listingId, adminId) => {
-  const { handoverListingByAdmin } = await import('./requestsService');
   return handoverListingByAdmin(listingId, adminId);
 };

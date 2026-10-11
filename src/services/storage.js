@@ -1,10 +1,12 @@
-import { INITIAL_USERS, INITIAL_LISTINGS, INITIAL_REQUESTS, INITIAL_CONTRACTS } from './mockData';
+import { INITIAL_USERS, INITIAL_LISTINGS, INITIAL_REQUESTS, INITIAL_CONTRACTS, INITIAL_VIEWINGS, INITIAL_COUPONS } from './mockData';
 
 const STORAGE_KEYS = {
   USERS: 'makler_users_db',
   LISTINGS: 'makler_listings_db',
   REQUESTS: 'makler_requests_db',
   CONTRACTS: 'makler_contracts_db',
+  VIEWINGS: 'makler_viewings_db',
+  COUPONS: 'makler_coupons_db',
   CURRENT_USER: 'makler_current_user',
   FAVORITES: 'makler_user_favorites',
   AUDIT_LOGS: 'makler_audit_logs_db',
@@ -25,6 +27,12 @@ export const initStorage = () => {
   if (!localStorage.getItem(STORAGE_KEYS.CONTRACTS)) {
     localStorage.setItem(STORAGE_KEYS.CONTRACTS, JSON.stringify(INITIAL_CONTRACTS));
   }
+  if (!localStorage.getItem(STORAGE_KEYS.VIEWINGS)) {
+    localStorage.setItem(STORAGE_KEYS.VIEWINGS, JSON.stringify(INITIAL_VIEWINGS));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.COUPONS)) {
+    localStorage.setItem(STORAGE_KEYS.COUPONS, JSON.stringify(INITIAL_COUPONS));
+  }
   if (!localStorage.getItem(STORAGE_KEYS.CURRENT_USER)) {
     // Default logged in as tenant/user for seamless demo
     localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(INITIAL_USERS[3]));
@@ -38,6 +46,23 @@ export const initStorage = () => {
   if (!localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS)) {
     localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify([]));
   }
+};
+
+/**
+ * Demo ma'lumotlarni tozalab, boshlang'ich holatga qaytarish
+ */
+export const resetDemoStorage = () => {
+  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(INITIAL_USERS));
+  localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(INITIAL_LISTINGS));
+  localStorage.setItem(STORAGE_KEYS.REQUESTS, JSON.stringify(INITIAL_REQUESTS));
+  localStorage.setItem(STORAGE_KEYS.CONTRACTS, JSON.stringify(INITIAL_CONTRACTS));
+  localStorage.setItem(STORAGE_KEYS.VIEWINGS, JSON.stringify(INITIAL_VIEWINGS));
+  localStorage.setItem(STORAGE_KEYS.COUPONS, JSON.stringify(INITIAL_COUPONS));
+  localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(['list_1']));
+  localStorage.setItem(STORAGE_KEYS.AUDIT_LOGS, JSON.stringify([]));
+  localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify([]));
+  localStorage.removeItem('makler_active_otps');
+  localStorage.removeItem('makler_otp_attempts');
 };
 
 export const delay = (ms = 250) => new Promise((resolve) => setTimeout(resolve, ms));

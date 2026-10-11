@@ -38,6 +38,7 @@ export const PaymentModal = ({ isOpen, onClose, request, onSuccess }) => {
 
   const handlePay = async (e) => {
     e.preventDefault();
+
     // Karta validatsiyasi: 16 raqam + MM/YY format
     if (cardNumber.replace(/\D/g, '').length !== 16) {
       setCardError(t('payment.err_card_length'));
@@ -64,6 +65,11 @@ export const PaymentModal = ({ isOpen, onClose, request, onSuccess }) => {
       setProcessing(false);
     }
   };
+
+  const tabsList = [
+    { id: 'click', label: 'Click Evolution' },
+    { id: 'payme', label: 'Payme' }
+  ];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('payment.modal_title')} maxWidth="500px">
@@ -92,10 +98,7 @@ export const PaymentModal = ({ isOpen, onClose, request, onSuccess }) => {
               {t('payment.choose_method')}:
             </label>
             <Tabs
-              tabs={[
-                { id: 'click', label: 'Click Evolution' },
-                { id: 'payme', label: 'Payme' }
-              ]}
+              tabs={tabsList}
               activeTab={provider}
               onChange={setProvider}
               size="md"
@@ -130,7 +133,9 @@ export const PaymentModal = ({ isOpen, onClose, request, onSuccess }) => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <small style={{ color: 'var(--text-muted)' }}>Toʻlov summasi:</small>
-              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--primary)' }}>$30.00</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--primary)' }}>
+                $30.00
+              </div>
             </div>
             <Button type="submit" variant="primary" size="lg" loading={processing}>
               {processing ? t('payment.simulating') : t('payment.confirm_pay')}

@@ -79,6 +79,36 @@ export const INITIAL_USERS = [
     avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=250&q=80',
     rating: 0,
     dealsCount: 0
+  },
+  {
+    id: 'user_agent_1',
+    phone: '+998901110011',
+    firstName: 'Farrux',
+    lastName: 'Zokirov',
+    role: 'AGENT',
+    pinfl: '32009854410099',
+    birthDate: '1995-03-20',
+    verificationStatus: USER_VERIFICATION_STATUS.VERIFIED,
+    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=250&q=80',
+    assignedRegion: 'tashkent_city',
+    rating: 4.95,
+    dealsCount: 18,
+    activeTasks: 2
+  },
+  {
+    id: 'user_agent_2',
+    phone: '+998902220022',
+    firstName: 'Otabek',
+    lastName: 'Yoqubov',
+    role: 'AGENT',
+    pinfl: '31804921130055',
+    birthDate: '1997-07-14',
+    verificationStatus: USER_VERIFICATION_STATUS.VERIFIED,
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=250&q=80',
+    assignedRegion: 'samarkand',
+    rating: 4.88,
+    dealsCount: 12,
+    activeTasks: 1
   }
 ];
 
@@ -1262,3 +1292,65 @@ export const INITIAL_CONTRACTS = [
     createdAt: '2026-04-08T10:30:00.000Z'
   }
 ];
+
+export const INITIAL_COUPONS = [
+  {
+    id: 'coupon_demo_1',
+    userId: 'user_tenant_1',
+    code: 'VIEW-FREE-9842',
+    valueUSD: 30,
+    title: '1 ta Bepul qayta koʻrsatish kuponi',
+    reason: 'Uyni koʻrgach yoqmaganligi sababli taqdim etilgan kafolat kuponi',
+    validUntil: new Date(Date.now() + 14 * 24 * 3600 * 1000).toISOString(),
+    isUsed: false,
+    createdAt: new Date().toISOString()
+  }
+];
+
+export const INITIAL_VIEWINGS = [
+  {
+    id: 'viewing_1',
+    requestId: 'req_1',
+    listingId: 'list_1',
+    agentId: 'user_agent_1',
+    tenantId: 'user_tenant_1',
+    landlordId: 'user_owner_1',
+    status: 'SCHEDULE_CONFIRMED', // 'PENDING_ASSIGNMENT' | 'ASSIGNED' | 'SCHEDULE_CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
+    scheduledAt: new Date(Date.now() + 4 * 3600 * 1000).toISOString(),
+    address: 'Yunusobod 4-kvartal, 18-uy, 42-xonadon',
+    proposedSlots: [
+      new Date(Date.now() + 4 * 3600 * 1000).toISOString(),
+      new Date(Date.now() + 8 * 3600 * 1000).toISOString()
+    ],
+    rescheduleCount: 0,
+    slaAssignedAt: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
+    slaDeadline: new Date(Date.now() + 42 * 3600 * 1000).toISOString(),
+    notes: 'Mijoz 14:00 da metro oldidan kutib olinadi',
+    checklist: {
+      matchesListing: true,
+      drawbacksNoted: false,
+      landlordPresent: true,
+      photosTaken: true
+    },
+    outcome: null // 'LIKED' | 'DISLIKED' | 'MISMATCH' | 'OWNER_ABSENT' | 'CLIENT_ABSENT'
+  },
+  {
+    id: 'viewing_2',
+    requestId: 'req_2',
+    listingId: 'list_2',
+    agentId: 'user_agent_1',
+    tenantId: 'user_tenant_1',
+    landlordId: 'user_owner_2',
+    status: 'PENDING_ASSIGNMENT',
+    scheduledAt: null,
+    address: 'Mirzo Ulugʻbek tumani, Buyuk Ipak Yoʻli 12-uy',
+    proposedSlots: [],
+    rescheduleCount: 0,
+    slaAssignedAt: new Date(Date.now() - 1 * 3600 * 1000).toISOString(),
+    slaDeadline: new Date(Date.now() + 47 * 3600 * 1000).toISOString(),
+    notes: 'Avto-tayinlov kutmoqda (Yaqin agent: Farrux Zokirov)',
+    checklist: null,
+    outcome: null
+  }
+];
+
