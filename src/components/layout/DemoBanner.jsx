@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { resetDemoStorage } from '../../services/storage';
 import { toast } from '../../store/toastStore';
-import { Sparkles, RotateCcw, User, Shield, Briefcase, Home, BookOpen } from 'lucide-react';
+import { Sparkles, RotateCcw, User, Shield, Home, BookOpen } from 'lucide-react';
 import './DemoBanner.css';
 
 export const DemoBanner = () => {
@@ -29,9 +29,9 @@ export const DemoBanner = () => {
   const handleQuickSwitch = (role) => {
     switchRole(role);
     toast.info(`Rol ${role} ga almashtirildi`);
-    if (role === 'AGENT') {
-      navigate('/agent');
-    } else if (role === 'ADMIN') {
+    // Eslatma: AGENT paneli hozircha mavjud emas (faqat service qatlamida),
+    // shuning uchun Agent tugmasi banner'dan olib tashlangan.
+    if (role === 'ADMIN') {
       navigate('/admin');
     } else {
       navigate('/');
@@ -77,15 +77,6 @@ export const DemoBanner = () => {
             >
               <Home size={12} />
               <span>Ega</span>
-            </button>
-            <button
-              type="button"
-              className="demo-role-btn"
-              onClick={() => handleQuickSwitch('AGENT')}
-              title="Agent (Farrux Zokirov) sifatida"
-            >
-              <Briefcase size={12} />
-              <span>Agent</span>
             </button>
             <button
               type="button"
