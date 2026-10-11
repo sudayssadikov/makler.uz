@@ -1,6 +1,7 @@
 import { delay, getFromStorage, setToStorage, STORAGE_KEYS } from './storage';
 import { REQUEST_STATUS } from '../constants/requestStatus';
 import { transitionRequestStatus } from './requestsService';
+import { LISTING_STATUS } from '../constants/listingStatus';
 
 /**
  * Zayavka va e'lon asosida avtomatik shartnoma loyihasi generatsiya qilish
@@ -181,8 +182,9 @@ export const confirmMoveIn = async (contractId) => {
 
   // Listingni HANDED_OVER dan RENTED yoki SOLD ga o'tkazish
   try {
+    // listingsService bilan contractsService o'zaro (circular) bog'langan,
+    // shuning uchun faqat shu funksiya dinamik import qilinadi.
     const { transitionListingStatus, getListingById } = await import('./listingsService');
-    const { LISTING_STATUS } = await import('../constants/listingStatus');
     const listing = await getListingById(contract.listingId);
     const finalStatus = listing?.type === 'SALE' ? LISTING_STATUS.SOLD : LISTING_STATUS.RENTED;
     await transitionListingStatus(
