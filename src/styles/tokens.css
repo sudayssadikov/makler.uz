@@ -34,6 +34,10 @@
   --accent-gradient: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
   --accent-glow: 0 8px 24px rgba(245, 158, 11, 0.32);
 
+  /* Translucent tints (badge fonlari / info-box) */
+  --primary-light: rgba(79, 95, 240, 0.15);
+  --accent-light: rgba(245, 158, 11, 0.15);
+
   /* Status Colors */
   --success: #1FA971;
   --success-light: rgba(31, 169, 113, 0.15);
@@ -77,6 +81,7 @@
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 24px;
+  --radius-xl: 32px;
   --radius-full: 9999px;
 
   /* Typography Scales */
@@ -109,6 +114,11 @@
   --shadow-inset: var(--inset-1);
   --shadow-inset-deep: var(--inset-2);
   --shadow-inset-active: var(--inset-active);
+  /* Komponentlar ishlatadigan compat aliaslar — mavjud elevation token'lariga bog'lanadi */
+  --shadow-hover: var(--elev-hover);
+  --primary-text: var(--primary-contrast);
+  --neo-inset: var(--shadow-inset);
+  --neo-outset: var(--shadow-flat);
   --transition: var(--transition-normal);
 }
 
@@ -152,6 +162,10 @@
   --danger-light: rgba(248, 113, 113, 0.18);
   --info: #60A5FA;
   --info-light: rgba(96, 165, 250, 0.18);
+
+  /* Translucent tints (dark variantlari) */
+  --primary-light: rgba(108, 124, 255, 0.18);
+  --accent-light: rgba(255, 181, 71, 0.18);
 
   /* Neumorphic Elevations */
   --elev-1: 4px 4px 12px var(--shadow-dark), -4px -4px 12px var(--shadow-light);
