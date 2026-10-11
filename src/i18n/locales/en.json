@@ -168,6 +168,7 @@
     "owner_verified": "Owner Verified",
     "owner_pending": "Profile Pending Review",
     "hidden_contacts": "Contacts unlocked after payment",
+    "hidden_contacts_desc": "For verified and secure service, our agent will show you the property; contacts unlock after the $30 payment and owner approval",
     "rules": "House Rules",
     "location": "Location on Map",
     "match": "Match",

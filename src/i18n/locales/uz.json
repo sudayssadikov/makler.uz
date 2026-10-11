@@ -168,6 +168,7 @@
     "owner_verified": "Egasi tasdiqlangan",
     "owner_pending": "Tekshiruvdagi profil",
     "hidden_contacts": "Kontaktlar toʻlovdan keyin ochiladi",
+    "hidden_contacts_desc": "Xavfsizlik va tekshirilgan xizmat uchun, xodimimiz uyni koʻrsatishi va kontaktlar faqat 30$ toʻlangach hamda ega rozi boʻlgach ochiladi",
     "rules": "Uy qoidalari",
     "location": "Xaritada joylashuvi",
     "match": "Mos",
@@ -230,7 +231,7 @@
   },
   "payment": {
     "modal_title": "Xavfsiz Escrow toʻlovi - $30",
-    "desc": "Mablagʻ vositachi hisobida muzlatiladi va shartnoma tasdiqlanmaguncha saqlanadi",
+    "desc": "Mablagʻ xavfsiz Escrow hisobida muzlatiladi va shartnoma tasdiqlanmaguncha saqlanadi",
     "choose_method": "Toʻlov tizimini tanlang",
     "card_number": "Karta raqami",
     "card_exp": "Amal qilish muddati",

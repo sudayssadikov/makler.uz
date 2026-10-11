@@ -441,7 +441,7 @@ export const ListingDetails = () => {
               <div>
                 <strong>{t('listing.hidden_contacts')}</strong>
                 <p>
-                  Platforma vositachisiz va xavfsiz ishlashi uchun, kontaktlar faqat 30$ Escrow toʻlangach va ega rozi boʻlgach ochiladi.
+                  {t('listing.hidden_contacts_desc')}
                 </p>
               </div>
             </div>
